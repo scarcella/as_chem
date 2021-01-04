@@ -2,7 +2,7 @@ from data.mol_dataset import molset
 from data.graph_utils import batch_graph, graph_collate, graph_inputs
 from data.data_utils import split
 from feat.atom_features import atom_features, one_of_k_encoding, one_of_k_encoding_unk
-from models.gcn import GCN
+from models.gin import GIN_generic
 
 import numpy as np
 import pandas as pd
@@ -25,8 +25,20 @@ train_loader = DataLoader(train, batch_size=100, collate_fn=graph_collate)
 
 torch.cuda.set_device(0)
 
-model = GCN(75,[300,300,300],'relu',0.,1)
+model = GIN_generic( 75,[300,300,300],'relu',0.,1
+    
+)
 
+"""
+{
+    'input_features':75,
+    'hidden_channels':[300,300,300],
+    'activation':'relu',
+    'droput_perc': 0.25,
+    'out_classes':1
+    }
+    
+"""
 model.cuda()
 
 optim = Adam(model.parameters(),lr=0.002)
