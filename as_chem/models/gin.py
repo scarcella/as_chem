@@ -43,8 +43,8 @@ class GIN(nn.Module):
         for n,p in self.named_parameters():
             if n.endswith('weight'):
                 if self.nonlinearity_name in ['relu', 'leaky_relu']:
-#                     nn.init.kaiming_uniform_(p.data,nonlinearity=self.nonlinearity_name)
-                    nn.init.xavier_uniform_(p.data)
+                     nn.init.kaiming_uniform_(p.data,nonlinearity=self.nonlinearity_name, mode='fan_out')
+#                    nn.init.xavier_uniform_(p.data)
 
                 else:
                     nn.init.xavier_uniform_(p.data)

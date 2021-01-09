@@ -45,7 +45,7 @@ class GCN(nn.Module):
         
 
         assert activation in supported_activations, f'Activation not supported. Choose from {[a for a in activations.keys()]}'
-        self.nonlinearity = activations[activation]
+        self.nonlinearity = supported_activations[activation]
         self.nonlinearity_name = activation
         self.dropout = nn.Dropout(dropout_perc)
         self.fc = gcn_layer(out_d, out_classes)
