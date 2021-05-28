@@ -4,6 +4,7 @@ from functools import partial
 import torch
 import torch.nn as nn
 
+from .gnn_base import GNN
 from .utils import supported_activations
 
 class gcn_layer(nn.Module):
@@ -74,3 +75,17 @@ class GCN(nn.Module):
                 else:
                     nn.init.xavier_uniform_(p.data)
                     
+
+class GCN_generic(GNN):
+    def __init__(self, n_input_features: int, hidden_channels: List[int], 
+                activation:str, dropout_perc: float,out_classes: int):
+                
+                super(GCN_generic, self).__init__(
+                    architecture=gcn_layer, 
+                    input_features = n_input_features, 
+                    hidden_channels = hidden_channels, 
+                    activation =activation,
+                    dropout =dropout_perc, 
+                    out_classes =out_classes )
+                                        
+

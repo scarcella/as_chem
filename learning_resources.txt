@@ -1,0 +1,7 @@
+List of resources:
+
+- https://dsgiitr.com/blogs/
+- https://www.youtube.com/watch?v=JAB_plj2rbA&list=PLoROMvodv4rPLKxIpqhjhPgdQy7imNkDn
+- https://petar-v.com/GAT/
+- https://towardsdatascience.com/predictions-and-hopes-for-graph-ml-in-2021-6af2121c3e3d 
+- https://www.youtube.com/watch?v=uFLeKkXWq2c&list=PLBoQnSflObckArGNhOcNg7lQG_f0ZlHF5
