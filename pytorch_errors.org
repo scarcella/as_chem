@@ -1,0 +1,9 @@
+##+TITLE: Common PyTorch errors (& fixes hopefully)
+
+
+* Only Tensors of floating point and complex dtype can require gradients
+
+- https://github.com/pytorch/pytorch/issues/53466
+
+* Could not run 'aten::coalesce' with arguments from the 'CUDA' backend. 'aten::coalesce' is only available for these backends: [SparseCPU, SparseCUDA, Autograd, Profiler, Tracer].
+- seems that the tensor wasnt a sparse tensor
