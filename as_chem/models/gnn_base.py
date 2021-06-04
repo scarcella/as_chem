@@ -21,7 +21,7 @@ class GNN(nn.Module):
 
     """
     def __init__(self, architecture:nn.Module ,input_features:int, hidden_channels:List[int], activation:str,
-                 dropout:float, out_classes:int ):
+                 dropout:float, out_classes:int,*args, **kwargs ):
                 
         super(GNN, self).__init__()
         self.gnn_layer = architecture
@@ -29,7 +29,7 @@ class GNN(nn.Module):
         self.graph_convs = nn.ModuleList()
         for d in hidden_channels:
                     out_d = d 
-                    gnn_layer = self.gnn_layer(in_d, out_d)
+                    gnn_layer = self.gnn_layer(in_d, out_d, *args, **kwargs)
                     self.graph_convs.append(gnn_layer)
                     in_d = out_d                
         
@@ -43,7 +43,7 @@ class GNN(nn.Module):
         self.nonlinearity = activations[activation]()
         self.nonlinearity_name = activation
         self.dropout = nn.Dropout(dropout)
-        self.fc = self.gnn_layer(out_d, out_classes)
+        self.fc = self.gnn_layer(out_d, out_classes, *args, **kwargs)
         self.sigmoid = nn.Sigmoid()
 
     def forward(self, X, A, graph_sizes):
@@ -58,6 +58,7 @@ class GNN(nn.Module):
         out.retain_grad()
         return out
 
+    
     def init_weights(self):
         for n,p in self.named_parameters():
             if n.endswith('weight'):

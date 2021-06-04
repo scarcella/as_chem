@@ -5,3 +5,7 @@ List of resources:
 - https://petar-v.com/GAT/
 - https://towardsdatascience.com/predictions-and-hopes-for-graph-ml-in-2021-6af2121c3e3d 
 - https://www.youtube.com/watch?v=uFLeKkXWq2c&list=PLBoQnSflObckArGNhOcNg7lQG_f0ZlHF5
+
+
+Pytorch specifically
+- http://blog.ezyang.com/2019/05/pytorch-internals/ ; http://blog.ezyang.com/2020/05/a-brief-taxonomy-of-pytorch-operators-by-shape-behavior/
