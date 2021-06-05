@@ -27,12 +27,29 @@ class GNN(nn.Module):
         self.gnn_layer = architecture
         in_d, out_d = input_features, None
         self.graph_convs = nn.ModuleList()
-        for d in hidden_channels:
-                    out_d = d 
-                    gnn_layer = self.gnn_layer(in_d, out_d, *args, **kwargs)
-                    self.graph_convs.append(gnn_layer)
-                    in_d = out_d                
-        
+
+        if 'att_heads' in kwargs: #Attention Models
+            K = kwargs.get('att_heads')
+            del kwargs['att_heads'] # this will be passed in manually
+            if type(K) == int:
+                K = [K] * len(hidden_channels)
+            assert len(K)==len(hidden_channels), "The number of attention heads should be either 1 or one more than the number of hidden channels(for the final layer)."     
+            K.insert(0,1) # since raw data has no heads
+            for k,d in enumerate(hidden_channels):
+                out_d = d
+                gnn_layer = self.gnn_layer(in_d*K[k], out_d,att_heads=K[k+1] ,*args, **kwargs)
+                self.graph_convs.append(gnn_layer)
+                in_d = out_d                
+            self.fc = self.gnn_layer(out_d*K[-2], out_classes,att_heads=K[-1], att_concat=False *args, **kwargs)
+
+        else:    
+            for d in hidden_channels:
+                        out_d = d 
+                        gnn_layer = self.gnn_layer(in_d, out_d, *args, **kwargs)
+                        self.graph_convs.append(gnn_layer)
+                        in_d = out_d                
+            self.fc = self.gnn_layer(out_d, out_classes, *args, **kwargs)
+            
         activations = {
             'relu': nn.ReLU,
             'leaky_relu': nn.LeakyReLU,
@@ -43,7 +60,6 @@ class GNN(nn.Module):
         self.nonlinearity = activations[activation]()
         self.nonlinearity_name = activation
         self.dropout = nn.Dropout(dropout)
-        self.fc = self.gnn_layer(out_d, out_classes, *args, **kwargs)
         self.sigmoid = nn.Sigmoid()
 
     def forward(self, X, A, graph_sizes):

@@ -1,4 +1,4 @@
-##+TITLE: Common PyTorch errors (& fixes hopefully)
+#+TITLE: Common PyTorch errors (& fixes hopefully)
 
 
 * Only Tensors of floating point and complex dtype can require gradients

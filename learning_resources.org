@@ -1,0 +1,22 @@
+#+title: List of resources
+
+GNN
+- https://dsgiitr.com/blogs/
+- https://www.youtube.com/watch?v=JAB_plj2rbA&list=PLoROMvodv4rPLKxIpqhjhPgdQy7imNkDn
+- https://petar-v.com/GAT/
+- https://towardsdatascience.com/predictions-and-hopes-for-graph-ml-in-2021-6af2121c3e3d 
+- https://www.youtube.com/watch?v=uFLeKkXWq2c&list=PLBoQnSflObckArGNhOcNg7lQG_f0ZlHF5
+
+
+Pytorch specifically
+- http://blog.ezyang.com/2019/05/pytorch-internals/ 
+- http://blog.ezyang.com/2020/05/a-brief-taxonomy-of-pytorch-operators-by-shape-behavior/
+- https://adityassrana.github.io/blog/
+- https://www.pytorchlightning.ai/blog
+- https://github.com/arogozhnikov/einops
+- https://medium.com/analytics-vidhya/basic-important-functions-of-pytorch-pytorch-series-week-1-snehit-vaddi-8dc8aee5b5a5
+- https://cassieguo.medium.com/different-tastes-of-matrix-multiplication-in-pytorch-1bb3a735e5a7
+
+Python generally
+- https://arogozhnikov.github.io/2020/10/01/dont-write-cli.html
+
