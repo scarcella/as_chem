@@ -205,7 +205,7 @@ class gat_layer(nn.Module):
                                         dtype=weighted_features.dtype, device=weighted_features.device) 
 
         #Broadcast across 1. attention heads 2. Features_Out
-        idx_stretched = edge_index[1].unsqueeze(-1).unsqueeze(-1).repeat((1,self.att_heads,1))   
+        idx_stretched = edge_index[1].unsqueeze(-1).unsqueeze(-1).repeat((1,self.att_heads,self.out_d))   
         # or according to  https://github.com/gordicaleksa/pytorch-GAT
         # idx_streteched_ = edge_index[1].unsqueeze(-1).unsqueeze(-1).expand_as(weighted_features)
 

@@ -1,0 +1,9 @@
+#+title: Functionality to be built
+
+* Finish off generic base class
+
+** Finish GAT for single class classification
+
+*** TODO Debug back propagation
+
+*** TODO Test out performance on single task classification problems
