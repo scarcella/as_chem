@@ -61,6 +61,8 @@ class GNN(nn.Module):
         self.nonlinearity_name = activation
         self.dropout = nn.Dropout(dropout)
         self.sigmoid = nn.Sigmoid()
+        
+        self.init_weights()
 
     def forward(self, X, A, graph_sizes):
         for g_conv in self.graph_convs:
@@ -77,10 +79,14 @@ class GNN(nn.Module):
     
     def init_weights(self):
         for n,p in self.named_parameters():
-            if n.endswith('weight'):
+            print(n)
+            if n.endswith('weight') or ('att_' in n): # attention mechanism isnt done through nn.Linear
                 if self.nonlinearity_name in ['relu', 'leaky_relu']:
                      nn.init.kaiming_uniform_(p.data,nonlinearity=self.nonlinearity_name)
 #                    nn.init.xavier_uniform_(p.data)
 
                 else:
                     nn.init.xavier_uniform_(p.data)
+
+            if n.endswith('bias'):
+                torch.nn.init.zeros_(p.data)
