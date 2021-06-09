@@ -15,7 +15,7 @@ class gcn_layer(nn.Module):
 
     def forward(self, features, bonds):
         h = self.linear(features)
-        h = torch.matmul(bonds,h)
+        h = torch.matmul(bonds,h) # aggregation step
         return h
 
 """class masked_linear(nn.Module):
@@ -62,7 +62,8 @@ class gin_layer(nn.Module):
 
 
 class gat_layer(nn.Module):
-    def __init__(self,in_d:int, out_d:int, att_heads:int, dropout:float = 0.2 , att_concat:bool = True, nonlinearity:str = 'LeakyRelu'):
+    def __init__(self,in_d:int, out_d:int, att_heads:int, dropout:float = 0.2 , 
+                att_concat:bool = True, nonlinearity:str = 'LeakyRelu', negative_slope:float = 0.2):
         """
         att_K: Number of attention mechanisms - specified as k in the paper.
         att_agg: How to aggregate the attention mechanisms. Typically concatenated unless it is the final layer.
@@ -83,7 +84,8 @@ class gat_layer(nn.Module):
         self.att_src = nn.Parameter(torch.Tensor(att_heads, out_d)) # might need to add another dimension 
         self.att_dst = nn.Parameter(torch.Tensor(att_heads, out_d)) # other implementations had: 1 x H x Out_D
         
-        self.leaky_relu =  nn.LeakyReLU(0.2)
+        self.neg_slope = negative_slope
+        self.leaky_relu =  nn.LeakyReLU(self.neg_slope)
         self.softmax = nn.Softmax(dim=-1)
         self.att_concat = att_concat
 

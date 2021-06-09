@@ -19,8 +19,9 @@ from torch.utils.tensorboard import SummaryWriter
 dataset_file = Path('datasets/tox21.csv.gz')
 
 #tox21 = pd.read_csv(dataset_file)
-target = 'SR-MMP'
-tox21_molset = molset(dataset_file,'smiles', [target], normalise=False)
+targets = ['NR-AR', 'NR-AR-LBD', 'NR-AhR', 'NR-Aromatase', 'NR-ER', 'NR-ER-LBD',         
+'NR-PPAR-gamma', 'SR-ARE', 'SR-ATAD5', 'SR-HSE', 'SR-MMP', 'SR-p53']
+tox21_molset = molset(dataset_file,'smiles', targets, normalise=False)
 train, test = torch.utils.data.random_split(tox21_molset, split(tox21_molset, [.8, .2]),
                                             generator=torch.Generator().manual_seed(42))
 train_loader = DataLoader(train, batch_size=100, collate_fn=graph_collate)
@@ -34,7 +35,7 @@ GAT_model = GNN(
     hidden_channels=[300,300,300],
     activation='relu',
     dropout= 0.25,
-    out_classes=1
+    num_tasks=len(targets)
 )
 
 GAT_model.cuda()
@@ -47,21 +48,22 @@ predictions = None
 writer = SummaryWriter()
 GAT_model.train()
 GAT_model.init_weights()
-epochs = 100
+epochs = 1000
 for e in range(epochs):
     for b_i,batch in enumerate(train_loader):
         optim.zero_grad()
         predictions = GAT_model.forward(batch.X, batch.A, batch.graph_sizes)
-        y = torch.tensor([y[target] for y in batch.Y], device='cuda')
-        loss = bce(predictions,y)#.cuda()
+        
+        Y_b = torch.stack([torch.tensor(y) for y in batch.Y]).cuda()
+        loss = bce(predictions,Y_b)#.cuda()
         loss.backward()
         optim.step()
         if (b_i%50==0):
             batch_num =  e*(len(train_loader.dataset) + b_i)
             writer.add_scalar('BCE loss: Train', loss.item(), batch_num)
-            binary_predictions = (predictions>0.5).float()
-            correct = (binary_predictions == y.float()).float().sum()
-            print(f"Epoch {e}/{epochs}, Loss: {loss.item()}, Accuracy: {correct/len(y)}")
+            #binary_predictions = (predictions>0.5).float()
+            #correct = (binary_predictions == y.float()).float().sum()
+            print(f"Epoch {e}/{epochs}, Loss: {loss.item()}")#, Accuracy: {correct/len(y)}")
             for n,p in GAT_model.named_parameters():
                 if 'bias' not in n:
                     writer.add_scalar(f'{n}:mean', p.mean().item(),batch_num)
