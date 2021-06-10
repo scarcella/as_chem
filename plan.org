@@ -4,6 +4,44 @@
 
 ** Finish GAT for single class classification
 
-*** TODO Debug back propagation
+*** DONE Debug back propagation
 
-*** TODO Test out performance on single task classification problems
+*** DONE Test out performance on single task classification problems
+
+    - single task performance from most models seems similar and very suspicious
+
+** Add in extra features to GAT 
+
+*** TODO Inspect final layer - reference GAT implementation outputs raw scores
+
+*** TODO Skip connections
+
+*** TODO Dropout (feature and attention seperately)
+
+*** TODO Batch norm?
+
+** TODO Different readout modes ( that is aggregating info from nodes into a single graph classification)
+
+   - at the moment, just averaging across modes
+   - allow for different options
+
+** Add in skip connections to all models ( maybe in the generic class ) 
+
+** Build out multitask classification
+
+*** TODO Try add it into generic model
+
+**** TODO Examine how the batching is affected ( specifically the final line/part of forward )
+
+**** TODO Inspect how it affects dataset class
+
+**** TODO Check out loss function changes
+
+*** TODO Flex out the data handling tools
+
+**** TODO e.g. check out the DGL batch graph functions
+
+** Finish off GIN (check out DGL Life Sci)
+
+** Add in jumping knowledge [[https://arxiv.org/abs/1806.03536][Representation Learning on Graphs with Jumping Knowledge Networks]]
+

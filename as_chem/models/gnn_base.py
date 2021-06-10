@@ -21,7 +21,7 @@ class GNN(nn.Module):
 
     """
     def __init__(self, architecture:nn.Module ,input_features:int, hidden_channels:List[int], activation:str,
-                 dropout:float, out_classes:int,*args, **kwargs ):
+                 dropout:float, num_tasks:int, **kwargs ):
                 
         super(GNN, self).__init__()
         self.gnn_layer = architecture
@@ -37,10 +37,11 @@ class GNN(nn.Module):
             K.insert(0,1) # since raw data has no heads
             for k,d in enumerate(hidden_channels):
                 out_d = d
-                gnn_layer = self.gnn_layer(in_d*K[k], out_d,att_heads=K[k+1] ,*args, **kwargs)
+                att_agg = k < (len(hidden_channels)-1) #concat attention heads except final hidden channel
+                gnn_layer = self.gnn_layer(in_d*K[k], out_d,att_heads=K[k+1] , att_concat= att_agg, **kwargs)
                 self.graph_convs.append(gnn_layer)
                 in_d = out_d                
-            self.fc = self.gnn_layer(out_d*K[-2], out_classes,att_heads=K[-1], att_concat=False *args, **kwargs)
+            self.final = nn.Linear(out_d, num_tasks) # no need to use graph structure in final layer
 
         else:    
             for d in hidden_channels:
@@ -48,7 +49,7 @@ class GNN(nn.Module):
                         gnn_layer = self.gnn_layer(in_d, out_d, *args, **kwargs)
                         self.graph_convs.append(gnn_layer)
                         in_d = out_d                
-            self.fc = self.gnn_layer(out_d, out_classes, *args, **kwargs)
+            self.final = nn.Linear(out_d, num_tasks)  # no need to use graph structure in final layer
             
         activations = {
             'relu': nn.ReLU,
@@ -70,9 +71,9 @@ class GNN(nn.Module):
             h = self.nonlinearity(h)
             X = self.dropout(h)
         
-        out =  self.fc(X,A)
+        out =  self.final(X)
         out = self.sigmoid(out)
-        out = torch.stack([g.mean() for g in out.split(graph_sizes)])
+        out = torch.stack([g.mean(0) for g in out.split(graph_sizes)]) # split into batches and then aggregate across nodes via averaging
         out.retain_grad()
         return out
 
